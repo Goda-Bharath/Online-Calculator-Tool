@@ -3,56 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="mini_project.css">
     <title>Mini Calculator</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .calculator {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .buttons button {
+            padding: 10px;
+            margin: 5px;
+            width: 60px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buttons button:hover {
+            background: #0056b3;
+        }
+
+        .result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
 <body>
 
-    <div class="calculator">
-        <h1>💥 Mini Calculator</h1>
+<div class="calculator">
+    <h2>💥 Mini Calculator</h2>
 
-        <input type="number" placeholder="Enter first number" id="rull-1">
-        <input type="number" placeholder="Enter second number" id="rull-2">
+    <input type="number" id="num1" placeholder="Enter first number">
+    <input type="number" id="num2" placeholder="Enter second number">
 
-        <div class="buttons">
-            <button onclick="Add()">+</button>
-            <button onclick="Sub()">−</button>
-            <button onclick="Mul()">×</button>
-            <button onclick="Dvd()">÷</button>
-        </div>
-
-        <div class="results">
-            <h2 id="adding"></h2>
-            <h2 id="subtracting"></h2>
-            <h2 id="multipling"></h2>
-            <h3 id="divising"></h3>
-        </div>
+    <div class="buttons">
+        <button onclick="calculate('add')">+</button>
+        <button onclick="calculate('sub')">−</button>
+        <button onclick="calculate('mul')">×</button>
+        <button onclick="calculate('div')">÷</button>
     </div>
 
-    <script>
-        function Add() {
-            var sum1 = parseInt(document.getElementById("rull-1").value);
-            var sum2 = parseInt(document.getElementById("rull-2").value);
-            document.getElementById("adding").innerHTML = "Value: " + (sum1 + sum2);
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+    function getValues() {
+        const num1 = parseFloat(document.getElementById("num1").value);
+        const num2 = parseFloat(document.getElementById("num2").value);
+
+        if (isNaN(num1) || isNaN(num2)) {
+            showError("⚠️ Please enter valid numbers");
+            return null;
         }
 
-        function Sub() {
-            var sum1 = document.getElementById("rull-1").value;
-            var sum2 = document.getElementById("rull-2").value;
-            document.getElementById("subtracting").innerHTML = "Value: " + (sum1 - sum2);
+        return { num1, num2 };
+    }
+
+    function showError(msg) {
+        const result = document.getElementById("result");
+        result.innerHTML = msg;
+        result.classList.add("error");
+    }
+
+    function showResult(value) {
+        const result = document.getElementById("result");
+        result.innerHTML = "Result: " + value;
+        result.classList.remove("error");
+    }
+
+    function calculate(type) {
+        const values = getValues();
+        if (!values) return;
+
+        const { num1, num2 } = values;
+
+        let result;
+
+        switch (type) {
+            case "add":
+                result = num1 + num2;
+                break;
+            case "sub":
+                result = num1 - num2;
+                break;
+            case "mul":
+                result = num1 * num2;
+                break;
+            case "div":
+                if (num2 === 0) {
+                    showError("❌ Cannot divide by zero");
+                    return;
+                }
+                result = num1 / num2;
+                break;
         }
 
-        function Mul() {
-            var sum1 = document.getElementById("rull-1").value;
-            var sum2 = document.getElementById("rull-2").value;
-            document.getElementById("multipling").innerHTML = "Value: " + (sum1 * sum2);
-        }
-
-        function Dvd() {
-            var sum1 = document.getElementById("rull-1").value;
-            var sum2 = document.getElementById("rull-2").value;
-            document.getElementById("divising").innerHTML = "Value: " + (sum1 / sum2);
-        }
-    </script>
+        showResult(result);
+    }
+</script>
 
 </body>
 </html>
